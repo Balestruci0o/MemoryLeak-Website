@@ -6,7 +6,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-01",
     type: "image",
-    src: "src/assets/XOR_z_NAND.png",
+    src: "/assets/XOR_z_NAND.png",
     title: "Logic Gate Foundation",
     description: "Building the basic AND, OR, NOT gates from another gates",
     category: "build",
