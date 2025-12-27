@@ -4,86 +4,76 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 1. OPTIMALIZÁCIA: Statické dáta presunuté mimo komponent, aby sa nevytvárali pri každom renderi
-const learningPath = [
-  { title: "Transistors", desc: "The building blocks of all digital electronics" },
-  { title: "Logic Gates", desc: "AND, OR, NOT and beyond" },
-  { title: "ALU", desc: "Arithmetic Logic Unit - the brain's calculator" },
-  { title: "Registers", desc: "Memory at the speed of light" },
-  { title: "Simple CLI", desc: "Your first computer" },
-];
-
 const AboutSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const diagramRef = useRef<SVGSVGElement>(null);
 
-  // 2. OPTIMALIZÁCIA: Použitie useLayoutEffect (namiesto useEffect) pre zabránenie prebliknutiu
   useLayoutEffect(() => {
-    // 3. OPTIMALIZÁCIA: Použitie gsap.context pre automatický cleanup (memory leaks)
     const ctx = gsap.context(() => {
-      const section = sectionRef.current;
-      const content = contentRef.current;
-      const diagram = diagramRef.current;
-
-      // Ochrana, ak by refs ešte neboli načítané
-      if (!section || !content || !diagram) return;
-
-      // Animate content
-      // Animujeme priamo children, vďaka ctx sú selektory bezpečné
-      gsap.fromTo(
-        content.children,
-        { opacity: 0, x: -50 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          stagger: 0.2,
+      // 1. Power Line - rastie počas celého scrollu sekcie
+      gsap.fromTo(".power-line", 
+        { scaleY: 0 }, 
+        { 
+          scaleY: 1, 
+          ease: "none", 
           scrollTrigger: {
-            trigger: section,
-            start: "top 70%",
-            end: "bottom 30%",
-            toggleActions: "play none none reverse",
-          },
+            trigger: sectionRef.current,
+            start: "top 75%",
+            end: "bottom 25%",
+            scrub: 1,
+          }
         }
       );
 
-      // Animate diagram paths & nodes
-      // Selektory fungujú v rámci diagramRef vďaka kontextu alebo priamemu volaniu
-      const paths = diagram.querySelectorAll(".diagram-path");
-      const nodes = diagram.querySelectorAll(".diagram-node");
+      // 2. Focus System - VYLEPŠENÉ ČASOVANIE
+      const textBlocks = gsap.utils.toArray(".reveal-block");
+      textBlocks.forEach((block: any, index: number) => {
+        const isFirst = index === 0;
 
-      gsap.set(paths, { strokeDasharray: 500, strokeDashoffset: 500 });
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: block,
+            // Start zostáva podobný pre plynulý nástup
+            start: isFirst ? "top 85%" : "top 75%",
+            // Koniec posunutý na spodok bloku, aby nezmizol predčasne
+            end: "bottom 10%", 
+            scrub: 0.5,
+          }
+        });
 
-      gsap.to(paths, {
-        strokeDashoffset: 0,
-        duration: 1.5,
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: diagram,
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
+        tl.to(block, { 
+          opacity: 1, 
+          filter: "blur(0px)", 
+          y: 0, 
+          duration: 1 
+        }) 
+        // Drží text čistý dlhšie (zvýšené z 2 na 4)
+        .to(block, { 
+          opacity: 1, 
+          filter: "blur(0px)", 
+          duration: 1 
+        })
+        // Odmazanie (blur) nastane až na samom konci scrollu daného bloku
+        .to(block, { 
+          opacity: 0.1, 
+          filter: "blur(10px)", 
+          duration: 1 
+        });
       });
 
-      gsap.fromTo(
-        nodes,
-        { scale: 0, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: diagram,
-            start: "top 70%",
-            toggleActions: "play none none reverse",
-          },
+      // 3. Statické zobrazenie tagov (Sandbox, Levels...) - nezmizne
+      gsap.from(".static-tags", {
+        opacity: 0,
+        y: 10,
+        duration: 1,
+        scrollTrigger: {
+          trigger: ".static-tags",
+          start: "top 95%",
+          toggleActions: "play none none reverse"
         }
-      );
-    }, sectionRef); // Scope pre gsap.context
+      });
 
-    // DÔLEŽITÉ: Cleanup funkcia, ktorá zruší všetky animácie a triggery pri odchode zo stránky
+    }, sectionRef);
+
     return () => ctx.revert();
   }, []);
 
@@ -91,146 +81,88 @@ const AboutSection = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative py-32 overflow-hidden"
+      className="relative py-48 overflow-hidden bg-background"
     >
-      {/* Background pattern */}
-      <div className="absolute inset-0 bg-circuit-pattern opacity-5" />
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]" />
+      </div>
 
-      <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Content */}
-          <div ref={contentRef}>
-            <span className="inline-block px-4 py-2 text-xs font-mono font-semibold tracking-widest text-primary border border-primary/30 rounded-full uppercase mb-6">
-              What is this?
-            </span>
-
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-foreground">Learn Digital</span>
-              <br />
-              <span className="text-primary neon-text">Electronics</span>
-            </h2>
-
-            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-              Project_Logic-gates is an interactive educational platform designed to teach
-              you digital electronics from the absolute fundamentals. Starting with
-              transistors, you'll progressively build your understanding until you can
-              construct a working computer.
-            </p>
-
-            <div className="space-y-4">
-              {learningPath.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-4 p-4 rounded-lg bg-card/50 border border-border/50 hover:border-primary/50 transition-colors duration-300"
-                >
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                    <span className="font-mono text-sm text-primary font-bold">
-                      {index + 1}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-display font-semibold text-foreground">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid lg:grid-cols-12 gap-12 items-start">
+          
+          <div className="hidden lg:flex lg:col-span-1 flex-col items-center self-stretch">
+            <div className="font-mono text-[10px] text-primary/40 mb-4 italic select-none uppercase tracking-widest">Init</div>
+            <div className="w-px h-24 bg-gradient-to-b from-transparent to-primary/30" />
+            <div className="w-2 h-2 rounded-full border border-primary shadow-[0_0_10px_#3b82f6]" />
+            <div className="power-line w-[2px] flex-grow bg-primary origin-top shadow-[0_0_15px_#3b82f6] relative" />
+            <div className="font-mono text-[10px] text-primary/40 mt-4 italic select-none uppercase tracking-widest">End</div>
           </div>
 
-          {/* Interactive Diagram */}
-          <div className="relative">
-            <svg
-              ref={diagramRef}
-              viewBox="0 0 400 500"
-              className="w-full max-w-md mx-auto"
-            >
-              <defs>
-                <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="hsl(180, 100%, 50%)" />
-                  <stop offset="100%" stopColor="hsl(160, 100%, 50%)" />
-                </linearGradient>
-                <filter id="nodeGlow">
-                  <feGaussianBlur stdDeviation="4" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
+          <div className="lg:col-span-11 max-w-4xl">
+            <div className="pl-4 md:pl-12 border-l border-white/5 space-y-32">
+              
+              {/* BLOK 1 - Mission Statement */}
+              <div className="reveal-block opacity-10 filter blur-[10px] translate-y-4">
+                <span className="inline-block px-4 py-1.5 text-[10px] font-mono font-semibold tracking-widest text-primary border border-primary/30 rounded-full uppercase mb-6">
+                  01_Purpose
+                </span>
+                <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 uppercase italic leading-tight">
+                  Removes the <br /> 
+                  <span className="text-primary neon-text">Mystery</span>
+                </h2>
+                <p className="text-muted-foreground text-lg md:text-xl leading-relaxed">
+                  MemoryLeak is an interactive learning game that removes the mystery behind computers. 
+                  Instead of memorizing concepts or watching diagrams, you construct everything step by step.
+                </p>
+              </div>
 
-              {/* Connection paths */}
-              <path
-                className="diagram-path"
-                d="M200 60 L200 140"
-                fill="none"
-                stroke="url(#pathGradient)"
-                strokeWidth="2"
-                filter="url(#nodeGlow)"
-              />
-              <path
-                className="diagram-path"
-                d="M200 180 L200 240"
-                fill="none"
-                stroke="url(#pathGradient)"
-                strokeWidth="2"
-                filter="url(#nodeGlow)"
-              />
-              <path
-                className="diagram-path"
-                d="M200 280 L200 340"
-                fill="none"
-                stroke="url(#pathGradient)"
-                strokeWidth="2"
-                filter="url(#nodeGlow)"
-              />
-              <path
-                className="diagram-path"
-                d="M200 380 L200 440"
-                fill="none"
-                stroke="url(#pathGradient)"
-                strokeWidth="2"
-                filter="url(#nodeGlow)"
-              />
+              {/* BLOK 2 - Process */}
+              <div className="reveal-block opacity-10 filter blur-[10px] translate-y-4">
+                <div className="flex items-center gap-4 mb-4 text-primary/50 uppercase font-mono text-[10px] tracking-widest">
+                   <div className="h-px w-10 bg-primary/30" />
+                   <span>02_Process</span>
+                </div>
+                <div className="space-y-6">
+                  <p className="text-muted-foreground text-lg md:text-xl leading-relaxed">
+                    You begin with individual transistors, turn them into logic gates, combine them into circuits, 
+                    and slowly assemble an entire computer that behaves exactly as real hardware does.
+                  </p>
 
-              {/* Nodes */}
-              {[
-                { y: 40, label: "Transistors" },
-                { y: 160, label: "Logic Gates" },
-                { y: 260, label: "ALU" },
-                { y: 360, label: "Registers" },
-                { y: 460, label: "CLI Computer" },
-              ].map((node, i) => (
-                <g key={i} className="diagram-node">
-                  <rect
-                    x="100"
-                    y={node.y - 20}
-                    width="200"
-                    height="40"
-                    rx="8"
-                    fill="hsl(220, 15%, 8%)"
-                    stroke="hsl(180, 100%, 50%)"
-                    strokeWidth="2"
-                    filter="url(#nodeGlow)"
-                  />
-                  <text
-                    x="200"
-                    y={node.y + 5}
-                    textAnchor="middle"
-                    className="fill-foreground font-display text-sm"
-                  >
-                    {node.label}
-                  </text>
-                  {i < 4 && (
-                    <polygon
-                      points={`200,${node.y + 35} 195,${node.y + 25} 205,${node.y + 25}`}
-                      fill="hsl(160, 100%, 50%)"
-                    />
-                  )}
-                </g>
-              ))}
-            </svg>
+                  <p className="text-primary/60 font-mono text-[10px] italic uppercase tracking-wider">
+                    // Every system you touch exists because you built it.
+                  </p>
+                </div>
+              </div>
+
+              {/* FOCUS BLOK 3 */}
+              <div className="reveal-block opacity-10 filter blur-[10px] translate-y-4">
+                <div className="grid md:grid-cols-2 gap-10 border-t border-white/5 pt-10">
+                  <div className="space-y-3 font-mono text-xs text-foreground/50 italic leading-relaxed">
+                    <p>Every system exists because you built it.</p>
+                    <p>Every instruction works because you understand it.</p>
+                  </div>
+                  
+                  <div className="md:text-right">
+                    <h3 className="text-primary neon-text font-display text-3xl md:text-4xl font-black uppercase italic leading-none tracking-tighter">
+                      No shortcuts. <br />
+                      No black boxes. <br />
+                      No “magic”.
+                    </h3>
+                  </div>
+                </div>
+              </div>
+
+              {/* STATICKÉ TAGY - Sandbox, Levels, Turing Complete */}
+              <div className="static-tags flex flex-wrap gap-8 pt-10 border-t border-white/5 font-mono text-[10px] tracking-[0.3em] text-primary/40 uppercase">
+                {["Sandbox Mode", "Levels", "Turing Complete"].map(tag => (
+                  <span key={tag} className="flex items-center gap-2">
+                    <span className="w-1 h-1 bg-primary/40 rounded-full shadow-[0_0_5px_#3b82f6]" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+            </div>
           </div>
         </div>
       </div>

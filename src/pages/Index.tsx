@@ -5,11 +5,12 @@ import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
-import FeaturesSection from "@/components/FeaturesSection";
+import LearningPathsSection from "@/components/LearningPathsSection";
 import GallerySection from "@/components/GallerySection";
 import BinaryCalculator from "@/components/BinaryCalculator";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,7 +33,7 @@ const Index = () => {
       <HeroSection />
       <AboutSection />
       <HowItWorksSection />
-      <FeaturesSection />
+      <LearningPathsSection />
       <GallerySection />
       {/* <BinaryCalculator /> */}
       <CTASection />

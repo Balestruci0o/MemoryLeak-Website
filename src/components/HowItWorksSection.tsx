@@ -8,32 +8,47 @@ const steps = [
   {
     number: "01",
     title: "Understand the Basics",
-    description: "Start with transistors - the fundamental building blocks. Learn how a simple switch can become the foundation of all computing.",
+    description: "Start with transistors — simple switches that form the foundation of computing.",
   },
   {
     number: "02",
     title: "Build Logic Gates",
-    description: "Combine transistors to create AND, OR, NOT, XOR, and more. Watch how binary decisions form the basis of digital logic.",
+    description: "Create AND, OR, NOT, XOR, and see how binary decisions build digital logic.",
   },
   {
     number: "03",
-    title: "Construct Complex Circuits",
-    description: "Use gates to build adders, multiplexers, encoders, and decoders. See how simple components create powerful circuits.",
+    title: "Boolean Algebra",
+    description: "Learn how true/false values combine and simplify circuits for efficiency.",
   },
   {
     number: "04",
-    title: "Design the ALU",
-    description: "Build the Arithmetic Logic Unit - the heart of any processor. Perform addition, subtraction, and logical operations.",
+    title: "Binary Math",
+    description: "Discover how computers do addition, subtraction, and binary calculations.",
   },
   {
     number: "05",
-    title: "Create Memory Systems",
-    description: "Implement registers and latches. Store data and create the memory architecture that makes computing possible.",
+    title: "Design the ALU",
+    description: "Explore the core unit that performs calculations and logic inside the CPU.",
   },
   {
     number: "06",
+    title: "Create Memory Systems",
+    description: "Build latches and registers to store data and form memory architecture.",
+  },
+  {
+    number: "07",
+    title: "Control Unit",
+    description: "The CPU’s brain that directs operations and manages instruction flow.",
+  },
+  {
+    number: "08",
     title: "Build Your Computer",
-    description: "Combine everything into a working CLI computer. Execute commands, run programs, and witness your creation come to life.",
+    description: "Combine all parts, run instructions, and bring your computer to life.",
+  },
+  {
+    number: "09",
+    title: "Assembly Language",
+    description: "Learn low-level instructions that bridge human commands and hardware.",
   },
 ];
 
@@ -53,80 +68,99 @@ const HowItWorksSection = () => {
       if (!section || !timeline || !line) return;
 
       if (isDesktop) {
-        // RESET PRE DESKTOP
-        gsap.set(items, { opacity: 0, y: 10 }); // Menší y offset pre rýchlejší pocit "usadenia"
-        gsap.set(".timeline-node", { scale: 0 });
-        gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
+        const totalWidth = timeline.scrollWidth - window.innerWidth;
 
-        const tl = gsap.timeline({
+        // 1. HLAVNÝ POHYB (Pin + Horizontal Scroll)
+        const scrollTween = gsap.to(timeline, {
+          x: -totalWidth,
+          ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: "top top",
-            end: () => `+=${timeline.scrollWidth}`,
-            scrub: 0.4, // Mierne svižnejšie ako 0.5
             pin: true,
-            anticipatePin: 1,
+            start: "top top",
+            end: () => `+=${totalWidth * 1}`,
+            scrub: 1,
             invalidateOnRefresh: true,
+            anticipatePin: 1, 
+            fastScrollEnd: true, 
+            pinSpacing: true, // Explicitne vynútené pre stabilitu
           },
         });
+        
 
-        // Pohyb timeline doľava
-        tl.to(timeline, {
-          x: () => -(timeline.scrollWidth - window.innerWidth),
-          ease: "none",
-        }, 0);
+        // 2. LINKA - Rastie so scrollom
+        gsap.fromTo(line, 
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            transformOrigin: "left center",
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: () => `+=${totalWidth * 1}`,
+              scrub: 1,
+            }
+          }
+        );
 
-        // Rast vodiacej linky
-        tl.to(line, {
-          scaleX: 1,
-          ease: "none",
-        }, 0);
+        // 3. ANIMÁCIA KARIET (Postupné naskakovanie)
+        items.forEach((item) => {
+          const card = item.querySelector(".card-body");
+          const node = item.querySelector(".timeline-node");
 
-        // ANIMÁCIA KARIET - Zrýchlený nástup
-        items.forEach((item, index) => {
-          // KĽÚČOVÁ ZMENA: 
-          // Namiesto (index / items.length) * 0.7 (čo rozťahovalo animáciu na celú dĺžku scrollu)
-          // teraz používame progresívny fixný štart. Karty sa "vybalia" oveľa skôr.
-          const appearanceStart = index * 0.08; 
-          
-          tl.to(item, {
+          // Reset (skrytie)
+          gsap.set(card, { opacity: 0, y: 40, scale: 0.95 });
+          gsap.set(node, { scale: 0, opacity: 0 });
+
+          // Animácia karty
+          gsap.to(card, {
             opacity: 1,
             y: 0,
-            duration: 0.1, // Kratšia duration pre promptnejší pocit
-            ease: "power1.out",
-          }, appearanceStart);
+            scale: 1,
+            scrollTrigger: {
+              trigger: item,
+              containerAnimation: scrollTween,
+              start: "left 95%", // Objaví sa hneď na kraji
+              end: "left 70%",   // Plne usadená
+              scrub: true,
+            }
+          });
 
-          const node = item.querySelector(".timeline-node");
-          if (node) {
-            tl.to(node, {
-              scale: 1,
-              ease: "back.out(2)",
-              duration: 0.1,
-            }, appearanceStart + 0.01);
-          }
+          // Animácia bodky
+          gsap.to(node, {
+            scale: 1,
+            opacity: 1,
+            scrollTrigger: {
+              trigger: item,
+              containerAnimation: scrollTween,
+              start: "left 98%",
+              end: "left 85%",
+              scrub: true,
+            }
+          });
         });
 
       } else {
-        // MOBIL LOGIKA
+        // Mobilná logika (Vertikálna)
         items.forEach((item) => {
           gsap.fromTo(item, 
             { opacity: 0, y: 20 },
             {
               opacity: 1,
               y: 0,
-              duration: 0.5,
-              ease: "power2.out",
               scrollTrigger: {
                 trigger: item,
-                start: "top 90%", // Skôr na mobile (keď je karta 10% od spodku)
+                start: "top 85%",
                 toggleActions: "play none none reverse"
               }
             }
           );
         });
       }
-
     }, sectionRef);
+
+    ScrollTrigger.refresh();
 
     return () => ctx.revert();
   }, []);
@@ -135,7 +169,7 @@ const HowItWorksSection = () => {
     <section 
       id="how-it-works"
       ref={sectionRef} 
-      className="relative min-h-screen lg:h-screen w-full bg-background flex flex-col overflow-x-hidden"
+      className="relative min-h-screen lg:h-screen w-full bg-background flex flex-col overflow-hidden"
     >
       {/* Background efekty */}
       <div className="absolute inset-0 z-0 pointer-events-none fixed lg:absolute">
@@ -154,7 +188,7 @@ const HowItWorksSection = () => {
         <rect width="100%" height="100%" fill="url(#ctaGrid)" />
       </svg>
 
-      <div className="relative z-10 h-full flex flex-col py-10 lg:py-10">
+      <div className="relative z-10 h-full flex flex-col py-10">
         
         {/* Header */}
         <div className="container mx-auto px-6 text-center shrink-0 mt-4 md:mt-10 mb-10 lg:mb-0">
@@ -169,8 +203,8 @@ const HowItWorksSection = () => {
             <span className="text-foreground">Build Your</span>{" "}
             <span className="text-primary neon-text">Computer</span>
           </h2>
-          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
-            From transistors to a fully functional computer - follow the complete journey.
+          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 font-mono">
+            From transistors to a fully functional computer.
           </p>
         </div>
 
@@ -178,7 +212,8 @@ const HowItWorksSection = () => {
         <div className="relative flex-grow flex lg:items-center w-full">
           <div
             ref={timelineRef}
-            className="flex flex-col gap-8 px-6 w-full lg:absolute lg:left-0 lg:flex-row lg:items-center lg:h-full lg:gap-0 lg:px-0 lg:pl-[25vw] lg:pr-[20vw] lg:w-auto"
+            // pl-[100vw] zabezpečí, že aj prvá karta vchádza až po scrolle
+            className="flex flex-col gap-8 px-6 w-full lg:absolute lg:left-0 lg:flex-row lg:items-center lg:h-full lg:gap-0 lg:px-0 lg:pl-[100vw] lg:pr-[30vw] lg:w-auto"
           >
             <div
               ref={lineRef}
@@ -190,6 +225,7 @@ const HowItWorksSection = () => {
               const isEven = index % 2 === 0;
               return (
                 <div key={index} className="timeline-item relative flex-shrink-0 w-full lg:w-[320px] lg:h-full flex lg:items-center justify-center lg:mx-10">
+                  {/* Pôvodný Node (bodka s ikonkou) */}
                   <div className="timeline-node hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-background border-2 border-primary items-center justify-center shadow-[0_0_15px_rgba(var(--primary),0.3)]">
                       <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
                       <div className="relative z-10 text-primary scale-75 md:scale-90">
@@ -200,7 +236,8 @@ const HowItWorksSection = () => {
                       </div>
                   </div>
                   
-                  <div className={`relative w-full lg:absolute ${isEven ? 'lg:bottom-[60%]' : 'lg:top-[60%]'}`}>
+                  {/* Pôvodný Dizajn Kartičiek (Terminál štýl) */}
+                  <div className={`card-body relative w-full lg:absolute ${isEven ? 'lg:bottom-[60%]' : 'lg:top-[60%]'}`}>
                     <div className="bg-zinc-950 border border-zinc-800 rounded-md overflow-hidden shadow-2xl mx-auto max-w-md lg:mx-2 will-change-transform">
                       <div className="bg-zinc-900 px-3 py-2 md:px-3 md:py-1.5 border-b border-zinc-800 flex items-center justify-between">
                         <div className="flex gap-1.5">
@@ -221,6 +258,7 @@ const HowItWorksSection = () => {
                         </p>
                       </div>
                     </div>
+                    {/* Spájacia čiarka */}
                     <div className={`hidden lg:block absolute left-1/2 -translate-x-1/2 w-0 border-l border-dashed border-primary/30 h-12 md:h-20 ${isEven ? 'top-full' : 'bottom-full'}`} />
                   </div>
                 </div>
@@ -228,14 +266,6 @@ const HowItWorksSection = () => {
             })}
           </div>
         </div>
-
-        {/* <div className="hidden lg:block text-center shrink-0 mt-4 md:mt-6 relative z-10">
-          <div className="inline-flex items-center gap-3 px-3 py-1 bg-accent/5 backdrop-blur-md rounded-full border border-accent/20">
-             <span className="text-muted-foreground font-mono text-[7px] md:text-[8px] uppercase tracking-[0.2em]">
-               Scroll horizontally to explore the journey
-             </span>
-          </div>
-        </div> */}
       </div>
     </section>
   );

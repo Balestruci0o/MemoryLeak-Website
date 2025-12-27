@@ -107,8 +107,7 @@ const HeroSection = () => {
         </div>
 
         <p className="hero-animate max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground font-body mb-10 leading-relaxed">
-          Master digital electronics from the ground up. Explore the **sandbox** mode 
-          or challenge yourself in designed **levels**.
+          Start with transistors, end with a working assembly-level computer. Learn by building, not memorizing.
         </p>
 
         <div className="hero-animate flex flex-col sm:flex-row gap-4 justify-center">
