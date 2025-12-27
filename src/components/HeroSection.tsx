@@ -88,7 +88,7 @@ const HeroSection = () => {
           >
             <div className="absolute inset-0 bg-primary/20 blur-[40px] rounded-full" />
             <img 
-              src="src/assets/maskot.png" 
+              src="/assets/maskot.png" 
               alt="Mascot" 
               className="w-full h-auto drop-shadow-[0_0_15px_rgba(0,255,255,0.4)]"
             />
