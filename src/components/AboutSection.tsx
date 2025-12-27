@@ -24,7 +24,7 @@ const AboutSection = () => {
         }
       );
 
-      // 2. Focus System - VYLEPŠENÉ ČASOVANIE
+      // 2. Focus System
       const textBlocks = gsap.utils.toArray(".reveal-block");
       textBlocks.forEach((block: any, index: number) => {
         const isFirst = index === 0;
@@ -32,9 +32,7 @@ const AboutSection = () => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: block,
-            // Start zostáva podobný pre plynulý nástup
             start: isFirst ? "top 85%" : "top 75%",
-            // Koniec posunutý na spodok bloku, aby nezmizol predčasne
             end: "bottom 10%", 
             scrub: 0.5,
           }
@@ -46,13 +44,11 @@ const AboutSection = () => {
           y: 0, 
           duration: 1 
         }) 
-        // Drží text čistý dlhšie (zvýšené z 2 na 4)
         .to(block, { 
           opacity: 1, 
           filter: "blur(0px)", 
-          duration: 1 
+          duration: 4 
         })
-        // Odmazanie (blur) nastane až na samom konci scrollu daného bloku
         .to(block, { 
           opacity: 0.1, 
           filter: "blur(10px)", 
@@ -60,7 +56,7 @@ const AboutSection = () => {
         });
       });
 
-      // 3. Statické zobrazenie tagov (Sandbox, Levels...) - nezmizne
+      // 3. Statické zobrazenie tagov
       gsap.from(".static-tags", {
         opacity: 0,
         y: 10,
@@ -81,7 +77,7 @@ const AboutSection = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative py-48 overflow-hidden bg-background"
+      className="relative py-48 overflow-hidden bg-background font-body" // Rajdhani ako základ
     >
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]" />
@@ -91,6 +87,7 @@ const AboutSection = () => {
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           
           <div className="hidden lg:flex lg:col-span-1 flex-col items-center self-stretch">
+            {/* JetBrains Mono pre tech popisky */}
             <div className="font-mono text-[10px] text-primary/40 mb-4 italic select-none uppercase tracking-widest">Init</div>
             <div className="w-px h-24 bg-gradient-to-b from-transparent to-primary/30" />
             <div className="w-2 h-2 rounded-full border border-primary shadow-[0_0_10px_#3b82f6]" />
@@ -106,11 +103,12 @@ const AboutSection = () => {
                 <span className="inline-block px-4 py-1.5 text-[10px] font-mono font-semibold tracking-widest text-primary border border-primary/30 rounded-full uppercase mb-6">
                   01_Purpose
                 </span>
-                <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 uppercase italic leading-tight">
+                {/* Orbitron pre nadpisy */}
+                <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 uppercase italic leading-tight tracking-tight">
                   Removes the <br /> 
                   <span className="text-primary neon-text">Mystery</span>
                 </h2>
-                <p className="text-muted-foreground text-lg md:text-xl leading-relaxed">
+                <p className="text-muted-foreground text-lg md:text-xl leading-relaxed font-medium">
                   MemoryLeak is an interactive learning game that removes the mystery behind computers. 
                   Instead of memorizing concepts or watching diagrams, you construct everything step by step.
                 </p>
@@ -123,7 +121,7 @@ const AboutSection = () => {
                    <span>02_Process</span>
                 </div>
                 <div className="space-y-6">
-                  <p className="text-muted-foreground text-lg md:text-xl leading-relaxed">
+                  <p className="text-muted-foreground text-lg md:text-xl leading-relaxed font-medium">
                     You begin with individual transistors, turn them into logic gates, combine them into circuits, 
                     and slowly assemble an entire computer that behaves exactly as real hardware does.
                   </p>
@@ -137,12 +135,13 @@ const AboutSection = () => {
               {/* FOCUS BLOK 3 */}
               <div className="reveal-block opacity-10 filter blur-[10px] translate-y-4">
                 <div className="grid md:grid-cols-2 gap-10 border-t border-white/5 pt-10">
-                  <div className="space-y-3 font-mono text-xs text-foreground/50 italic leading-relaxed">
+                  <div className="space-y-3 font-mono text-[11px] text-foreground/50 italic leading-relaxed">
                     <p>Every system exists because you built it.</p>
                     <p>Every instruction works because you understand it.</p>
                   </div>
                   
                   <div className="md:text-right">
+                    {/* Orbitron pre dramatický efekt */}
                     <h3 className="text-primary neon-text font-display text-3xl md:text-4xl font-black uppercase italic leading-none tracking-tighter">
                       No shortcuts. <br />
                       No black boxes. <br />
@@ -152,7 +151,7 @@ const AboutSection = () => {
                 </div>
               </div>
 
-              {/* STATICKÉ TAGY - Sandbox, Levels, Turing Complete */}
+              {/* STATICKÉ TAGY - JetBrains Mono */}
               <div className="static-tags flex flex-wrap gap-8 pt-10 border-t border-white/5 font-mono text-[10px] tracking-[0.3em] text-primary/40 uppercase">
                 {["Sandbox Mode", "Levels", "Turing Complete"].map(tag => (
                   <span key={tag} className="flex items-center gap-2">
