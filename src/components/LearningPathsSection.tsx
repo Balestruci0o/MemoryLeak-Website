@@ -123,7 +123,7 @@ const LearningPathsSection = () => {
                 <h3 className="font-display text-4xl md:text-5xl font-black uppercase italic mb-6 leading-none">
                   {learningPaths[activeIndex].title}
                 </h3>
-                <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-xl italic">
+                <p className="text-lg text-muted-foreground font-body leading-relaxed max-w-xl italic">
                   "{learningPaths[activeIndex].desc}"
                 </p>
                 

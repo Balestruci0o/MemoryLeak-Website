@@ -203,7 +203,7 @@ const HowItWorksSection = () => {
             <span className="text-foreground">Build Your</span>{" "}
             <span className="text-primary neon-text">Computer</span>
           </h2>
-          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 font-mono">
+          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4 font-body">
             From transistors to a fully functional computer.
           </p>
         </div>

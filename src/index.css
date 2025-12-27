@@ -39,7 +39,7 @@
     /* Custom colors for the simulator */
     --grid-bg: 215 18% 20%;
     --grid-lines: 215 12% 28%;
-    --neon-cyan: 180 100% 50%;
+    --neon-cyan: 180 100% 250;
     --neon-green: 160 100% 50%;
     --neon-yellow: 60 100% 50%;
     --neon-purple: 280 100% 60%;
@@ -61,6 +61,15 @@
 @layer base {
   * {
     @apply border-border;
+  }
+
+  html,body{
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;      /* Internet Explorer/Edge */
+    user-select: none;          /* Štandard (Chrome, Firefox, Opera) */
+    
+    /* Zakáže kontextové menu pri dlhom podržaní (užitočné pre mobily) */
+    -webkit-touch-callout: none;
   }
 
   body {

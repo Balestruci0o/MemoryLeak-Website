@@ -19,7 +19,6 @@ const MediaModal: React.FC<MediaModalProps> = ({
   const contentRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // 1. ANIMÁCIA (Open/Close) cez GSAP Context pre čistú pamäť
   useEffect(() => {
     if (!modalRef.current) return;
     const ctx = gsap.context(() => {
@@ -44,7 +43,6 @@ const MediaModal: React.FC<MediaModalProps> = ({
     return () => ctx.revert();
   }, [isOpen]);
 
-  // 2. KLÁVESY (ESC, Šípky)
   useEffect(() => {
     if (!isOpen) return;
     const handleKeys = (e: KeyboardEvent) => {
@@ -56,7 +54,6 @@ const MediaModal: React.FC<MediaModalProps> = ({
     return () => window.removeEventListener("keydown", handleKeys);
   }, [isOpen, onClose, onNavigate]);
 
-  // 3. GSAP HOVER EFEKT pre všetky tlačidlá
   const hover = (e: React.MouseEvent, enter: boolean) => {
     if (prefersReducedMotion) return;
     gsap.to(e.currentTarget, { 
@@ -68,36 +65,54 @@ const MediaModal: React.FC<MediaModalProps> = ({
   };
 
   if (!item) return null;
+  const isLocked = !item.src;
 
   return (
-    <div ref={modalRef} className="fixed inset-0 z-[100] items-center justify-center hidden opacity-0" role="dialog">
-      {/* Backdrop */}
+    <div ref={modalRef} className="fixed inset-0 z-[100] items-center justify-center hidden opacity-0 p-4 md:p-8" role="dialog">
       <div className="absolute inset-0 bg-black/95 backdrop-blur-md" onClick={onClose} />
 
-      {/* Main Content Card */}
-      <div ref={contentRef} className="relative z-10 w-full max-w-6xl mx-4 flex flex-col md:flex-row max-h-[90vh] overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-2xl">
+      <div 
+        ref={contentRef} 
+        className="relative z-10 flex flex-col md:flex-row w-full max-w-7xl max-h-[90vh] overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-2xl"
+      >
         
-        {/* MEDIA SECTION */}
-        <div className="relative flex-grow bg-black flex items-center justify-center min-h-[300px] group">
-          {item.type === "image" ? (
-            <img src={item.src} alt={item.title} className="max-w-full max-h-full object-contain select-none" />
+        {/* MEDIA SECTION - Adaptívna šírka */}
+        <div className="relative flex-grow bg-black flex items-center justify-center min-h-[300px] overflow-hidden group">
+          
+          {isLocked ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#050505]">
+               <div className="absolute inset-0 opacity-10" 
+                    style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1.5px, transparent 1.5px)', backgroundSize: '30px 30px' }} />
+               <div className="relative z-10 flex flex-col items-center text-center p-12">
+                  <div className="mb-6 flex items-center gap-3 px-4 py-2 bg-primary/5 border border-primary/20 rounded-full">
+                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#3b82f6]" />
+                    <span className="font-mono text-xs text-primary uppercase tracking-[0.2em] font-bold">System Locked</span>
+                  </div>
+                  <h2 className="text-4xl md:text-6xl font-black text-white/10 uppercase tracking-tighter mb-4 select-none">Access Denied</h2>
+               </div>
+            </div>
           ) : (
-            <div className="relative w-full h-full flex items-center">
-              <video ref={videoRef} src={item.src} autoPlay muted={isMuted} loop playsInline className="w-full h-full object-contain" />
-              <button 
-                onClick={onToggleMute} 
-                onMouseEnter={e => hover(e, true)} 
-                onMouseLeave={e => hover(e, false)} 
-                className="absolute bottom-6 right-6 px-4 py-2 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white uppercase tracking-widest outline-none"
-              >
-                {isMuted ? "Muted" : "Audio ON"}
-              </button>
+            <div className="w-full h-full flex items-center justify-center">
+              {item.type === "image" ? (
+                <img src={item.src} alt={item.title} className="max-w-full max-h-full object-contain select-none" />
+              ) : (
+                <div className="relative w-full h-full flex items-center">
+                  <video ref={videoRef} src={item.src} autoPlay muted={isMuted} loop playsInline className="w-full h-full object-contain" />
+                  <button 
+                    onClick={onToggleMute} 
+                    onMouseEnter={e => hover(e, true)} 
+                    onMouseLeave={e => hover(e, false)} 
+                    className="absolute bottom-6 right-6 px-4 py-2 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 text-[10px] font-mono text-white uppercase tracking-widest outline-none z-30"
+                  >
+                    {isMuted ? "Muted" : "Audio ON"}
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Navigation Overlay (Visible on Hover) */}
-          <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            {/* Prev Button */}
+          {/* Navigation Overlay */}
+          <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-40">
             <button 
               onClick={() => onNavigate("prev")} 
               onMouseEnter={e => hover(e, true)} 
@@ -109,7 +124,6 @@ const MediaModal: React.FC<MediaModalProps> = ({
               </svg>
             </button>
 
-            {/* Next Button */}
             <button 
               onClick={() => onNavigate("next")} 
               onMouseEnter={e => hover(e, true)} 
@@ -123,21 +137,21 @@ const MediaModal: React.FC<MediaModalProps> = ({
           </div>
         </div>
 
-        {/* INFO SECTION */}
+        {/* INFO SECTION - Fixná šírka pre text */}
         <div className="w-full md:w-[380px] shrink-0 p-8 flex flex-col bg-[#0d0d0d] border-l border-white/5 shadow-inner">
-          <span className="w-fit px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-white/40 uppercase mb-6 tracking-widest">
-            {item.category}
+          <span className={`w-fit px-3 py-1 rounded-full border text-[10px] font-mono uppercase mb-6 tracking-widest ${isLocked ? 'bg-primary/5 border-primary/20 text-primary' : 'bg-white/5 border-white/10 text-white/40'}`}>
+            {isLocked ? "Terminal Locked" : item.category}
           </span>
           
-          <h2 className="text-2xl font-bold text-white mb-4 tracking-tight leading-tight">
+          <h2 className={`text-2xl font-bold font-display mb-4 tracking-tight leading-tight ${isLocked ? 'text-white/40' : 'text-white'}`}>
             {item.title}
           </h2>
           
-          <p className="text-white/50 text-sm leading-relaxed mb-auto font-light">
-            {item.description}
+          <p className="text-white/50 text-sm leading-relaxed mb-auto font-body">
+            {isLocked ? "This feature is integrated into the sandbox core but hasn't been initialized yet. Access will be granted in upcoming levels." : item.description}
           </p>
 
-          {/* Footer Tip Section */}
+          {/* Footer Tip Section - VRÁTENÉ SPÄŤ */}
           <div className="mt-8 pt-6 border-t border-white/5 opacity-40 font-mono text-[9px] uppercase tracking-tight">
             <p className="text-white/50 mb-1 leading-relaxed">
               Tip: Use arrow keys to navigate in modal, ESC to close. Videos autoplay muted when visible.

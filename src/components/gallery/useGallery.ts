@@ -6,7 +6,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-01",
     type: "image",
-    src: "/assets/XOR_z_NAND.png",
+    src: "src/assets/XOR_z_NAND.png",
     title: "Logic Gate Foundation",
     description: "Building the basic AND, OR, NOT gates from another gates",
     category: "build",
@@ -24,7 +24,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-02",
     type: "image",
-    src: "/assets/gallery/gallery_img_02.png",
+    src: "",
     title: "ALU Architecture",
     description: "The complete Arithmetic Logic Unit design",
     category: "showcase",
@@ -32,7 +32,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "vid-02",
     type: "video",
-    src: "/assets/gallery/gallery_vid_02.mp4",
+    src: "",
     poster: "/assets/gallery/gallery_vid_02_poster.png",
     title: "Register Operations",
     description: "Demonstrating data storage and retrieval",
@@ -50,9 +50,9 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-04",
     type: "image",
-    src: "/assets/gallery/gallery_img_04.png",
-    title: "Binary Calculator",
-    description: "Interactive binary arithmetic operations",
+    src: "src/assets/counter.png",
+    title: "Binary Counter",
+    description: "Digital circuit that counts in binary with each clock pulse.",
     category: "showcase",
   },
   {
@@ -68,7 +68,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-05",
     type: "image",
-    src: "/assets/gallery/gallery_img_05.png",
+    src: "",
     title: "Multiplexer Design",
     description: "4-to-1 multiplexer circuit implementation",
     category: "build",
@@ -84,7 +84,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "vid-04",
     type: "video",
-    src: "/assets/gallery/gallery_vid_04.mp4",
+    src: "",
     poster: "/assets/gallery/gallery_vid_04_poster.png",
     title: "CLI Computer Demo",
     description: "The complete computer executing commands",
@@ -102,7 +102,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-08",
     type: "image",
-    src: "/assets/gallery/gallery_img_08.png",
+    src: "",
     title: "Control Unit",
     description: "Instruction decoder and control logic",
     category: "showcase",
@@ -110,7 +110,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-09",
     type: "image",
-    src: "/assets/gallery/gallery_img_09.png",
+    src: "",
     title: "Complete System",
     description: "All components working together",
     category: "showcase",

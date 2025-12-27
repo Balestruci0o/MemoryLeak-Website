@@ -37,7 +37,6 @@ const GalleryHeroSlider: React.FC<GalleryHeroSliderProps> = ({
     const ctx = gsap.context(() => {
       if (prefersReducedMotion || !containerRef.current) return;
 
-      // Animácia celej sekcie
       gsap.fromTo(containerRef.current, 
         { opacity: 0, y: 40 },
         {
@@ -48,15 +47,12 @@ const GalleryHeroSlider: React.FC<GalleryHeroSliderProps> = ({
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top 90%",
-            // End nastavený extrémne nízko, aby sekcia nezmizla pri scrolle dole
             end: "bottom -5000%", 
-            // play: pri vstupe zhora, reverse: pri návrate naspäť nahor nad sekciu
             toggleActions: "play none none reverse",
           }
         }
       );
 
-      // Animácia slidov (stagger efekt)
       gsap.fromTo(".hero-slide", 
         { opacity: 0, scale: 0.9 },
         { 
@@ -138,46 +134,84 @@ const GalleryHeroSlider: React.FC<GalleryHeroSliderProps> = ({
         className="flex gap-8 overflow-x-auto py-4 pl-[4vw] pr-[4vw] no-scrollbar items-center bg-transparent"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none", scrollBehavior: "auto" }}
       >
-        {highlightItems.map((item, index) => (
-          <div
-            key={item.id}
-            className={`hero-slide flex-shrink-0 w-[260px] md:w-[380px] cursor-pointer transition-all duration-700 group
-              ${index === activeIndex ? "scale-105 z-10 opacity-100" : "scale-90 opacity-40 hover:opacity-80"}`}
-            onMouseEnter={() => setActiveIndex(index)}
-            onClick={() => onItemClick(item)}
-          >
-            <div className={`relative transition-all duration-500 rounded-tr-[2.5rem] rounded-bl-[2.5rem] rounded-tl-lg rounded-br-lg overflow-hidden border-2 
-              ${index === activeIndex 
-                ? "border-primary shadow-[0_0_30px_rgba(var(--primary),0.2)] bg-primary/5" 
-                : "border-white/10 bg-transparent"}
-              backdrop-blur-sm group-hover:border-primary/80`}>
-              
-              <div className="absolute inset-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent -translate-y-full group-hover:animate-scan z-20 pointer-events-none" />
+        {highlightItems.map((item, index) => {
+          const isComingSoon = !item.src;
+          const isActive = index === activeIndex;
 
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <img src={item.poster || item.src} alt={item.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-4 md:p-5 w-full">
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-primary/80">{item.category}</span>
-                  <h3 className="text-lg md:text-xl font-black text-white mb-1 uppercase tracking-tighter group-hover:text-primary transition-colors">{item.title}</h3>
-                  <p className="text-[10px] md:text-xs text-gray-400 font-medium leading-tight line-clamp-2">{item.description}</p>
+          return (
+            <div
+              key={item.id}
+              className={`hero-slide flex-shrink-0 w-[260px] md:w-[380px] transition-all duration-700 group
+                ${isActive ? "scale-105 z-10 opacity-100" : "scale-90 opacity-40 hover:opacity-80"}
+                ${isComingSoon ? "cursor-default" : "cursor-pointer"}`}
+              onMouseEnter={() => setActiveIndex(index)}
+              onClick={() => !isComingSoon && onItemClick(item)}
+            >
+              <div className={`relative transition-all duration-500 rounded-tr-[2.5rem] rounded-bl-[2.5rem] rounded-tl-lg rounded-br-lg overflow-hidden border-2 
+                ${isActive 
+                  ? (isComingSoon ? "border-white/20 bg-white/5" : "border-primary shadow-[0_0_30px_rgba(59,130,246,0.2)] bg-primary/5") 
+                  : "border-white/10 bg-transparent"}
+                backdrop-blur-sm ${!isComingSoon && "group-hover:border-primary/80"}`}>
+                
+                {/* Skenovací efekt iba pre dostupné položky */}
+                {!isComingSoon && (
+                  <div className="absolute inset-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent -translate-y-full group-hover:animate-scan z-20 pointer-events-none" />
+                )}
+
+                <div className="relative aspect-[16/10] overflow-hidden flex items-center justify-center">
+                  {isComingSoon ? (
+                    /* COMING SOON PLACEHOLDER */
+                    <div className="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6">
+                      <div className="absolute inset-0 opacity-5" 
+                           style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+                      <span className="font-mono text-[10px] text-primary/40 uppercase tracking-[0.3em] mb-1">Status: Locked</span>
+                      <span className="text-white/20 text-xs font-bold uppercase tracking-widest">Coming Soon</span>
+                    </div>
+                  ) : (
+                    <>
+                      <img 
+                        src={item.poster || item.src} 
+                        alt={item.title} 
+                        loading="lazy" 
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                    </>
+                  )}
+
+                  <div className="absolute bottom-0 left-0 p-4 md:p-5 w-full z-20">
+                    <span className={`text-[9px] uppercase tracking-widest font-bold ${isComingSoon ? 'text-white/20' : 'text-primary/80'}`}>
+                      {isComingSoon ? "Access Denied" : item.category}
+                    </span>
+                    <h3 className={`text-lg md:text-xl font-black mb-1 uppercase tracking-tighter transition-colors ${isComingSoon ? 'text-white/40' : 'text-white group-hover:text-primary'}`}>
+                      {item.title}
+                    </h3>
+                    <p className="text-[10px] md:text-xs text-gray-400 font-medium leading-tight line-clamp-2">
+                      {isComingSoon ? "This module is currently encrypted and under development." : item.description}
+                    </p>
+                  </div>
                 </div>
               </div>
+              
+              <div className={`mt-3 font-mono text-[10px] transition-all duration-500 
+                ${isActive ? (isComingSoon ? "text-white/40" : "text-primary") : "text-white/20 opacity-50"}`}>
+                0{index + 1} / {isComingSoon ? "ENCRYPTED_FILE" : "CORE_DATA"}
+              </div>
             </div>
-            <div className={`mt-3 font-mono text-[10px] transition-all duration-500 ${index === activeIndex ? "text-primary opacity-100" : "text-white/20 opacity-50"}`}>
-              0{index + 1} / CORE_DATA
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Indikátory (bodky) */}
       <div className="flex justify-center items-center gap-4 mt-6 h-6">
-        {highlightItems.map((_, index) => (
+        {highlightItems.map((item, index) => (
           <button
             key={index}
             onClick={() => handleSlideChange(index)}
-            className={`h-1 transition-all duration-500 ${index === activeIndex ? "w-10 bg-primary shadow-[0_0_8px_rgba(var(--primary),0.4)]" : "w-3 bg-white/10 hover:bg-white/30"}`}
+            className={`h-1 transition-all duration-500 
+              ${index === activeIndex 
+                ? (!item.src ? "w-10 bg-white/20" : "w-10 bg-primary shadow-[0_0_8px_rgba(59,130,246,0.4)]") 
+                : "w-3 bg-white/10 hover:bg-white/30"}`}
           />
         ))}
       </div>

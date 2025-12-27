@@ -104,11 +104,11 @@ const AboutSection = () => {
                   01_Purpose
                 </span>
                 {/* Orbitron pre nadpisy */}
-                <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 uppercase italic leading-tight tracking-tight">
+                <h2 className="font-display text-3xl md:text-6xl font-bold mb-3">
                   Removes the <br /> 
                   <span className="text-primary neon-text">Mystery</span>
                 </h2>
-                <p className="text-muted-foreground text-lg md:text-xl leading-relaxed font-medium">
+                <p className="hero-animate max-w-2xl text-lg md:text-xl text-muted-foreground font-body mb-10 leading-relaxed">
                   MemoryLeak is an interactive learning game that removes the mystery behind computers. 
                   Instead of memorizing concepts or watching diagrams, you construct everything step by step.
                 </p>
@@ -121,12 +121,12 @@ const AboutSection = () => {
                    <span>02_Process</span>
                 </div>
                 <div className="space-y-6">
-                  <p className="text-muted-foreground text-lg md:text-xl leading-relaxed font-medium">
+                  <p className="hero-animate max-w-2xl text-lg md:text-xl text-muted-foreground font-body mb-10 leading-relaxed">
                     You begin with individual transistors, turn them into logic gates, combine them into circuits, 
                     and slowly assemble an entire computer that behaves exactly as real hardware does.
                   </p>
 
-                  <p className="text-primary/60 font-mono text-[10px] italic uppercase tracking-wider">
+                  <p className="text-primary/60 font-body text-[10px] italic uppercase tracking-wider">
                     // Every system you touch exists because you built it.
                   </p>
                 </div>
@@ -135,7 +135,7 @@ const AboutSection = () => {
               {/* FOCUS BLOK 3 */}
               <div className="reveal-block opacity-10 filter blur-[10px] translate-y-4">
                 <div className="grid md:grid-cols-2 gap-10 border-t border-white/5 pt-10">
-                  <div className="space-y-3 font-mono text-[11px] text-foreground/50 italic leading-relaxed">
+                  <div className="space-y-3 font-body text-[11px] text-foreground/50 italic leading-relaxed">
                     <p>Every system exists because you built it.</p>
                     <p>Every instruction works because you understand it.</p>
                   </div>

@@ -18,7 +18,6 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
   const gridRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
 
-  // 1. OBSERVER pre video - Optimalizovaný pre plynulosť
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -34,21 +33,19 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
           }
         });
       },
-      { threshold: 0.1, rootMargin: "100px" } // Začni načítavať o niečo skôr
+      { threshold: 0.1, rootMargin: "100px" }
     );
 
     videoRefs.current.forEach((v) => observer.observe(v));
     return () => observer.disconnect();
   }, [items]);
 
-  // Synchronizácia zvuku bez re-renderu celého listu
   useEffect(() => {
     videoRefs.current.forEach((video) => {
       video.muted = isMuted;
     });
   }, [isMuted]);
 
-  // 2. GSAP: Batch optimalizácia (výkonnejšie ako forEach trigger)
   useEffect(() => {
     if (prefersReducedMotion || !gridRef.current) return;
 
@@ -56,7 +53,6 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
       const cards = gridRef.current?.querySelectorAll(".gallery-card");
       if (!cards) return;
 
-      // Použitie batch šetrí CPU, pretože nevyvoláva stovky výpočtov naraz
       ScrollTrigger.batch(cards, {
         onEnter: (batch) => gsap.to(batch, { 
           opacity: 1, y: 0, scale: 1, stagger: 0.1, overwrite: true 
@@ -68,7 +64,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
       });
     }, gridRef);
 
-    return () => ctx.revert(); // Kompletné vyčistenie pamäte
+    return () => ctx.revert();
   }, [items, prefersReducedMotion]);
 
   const setVideoRef = useCallback((id: string, el: HTMLVideoElement | null) => {
@@ -83,64 +79,74 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
       ref={gridRef}
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4"
     >
-      {gridItems.map((item) => (
-        <figure
-          key={item.id}
-          onClick={() => onItemClick(item)}
-          className="gallery-card group relative cursor-pointer rounded-2xl overflow-hidden bg-card border border-white/5 shadow-xl transition-all duration-500 hover:shadow-primary/20 hover:border-primary/50 transform-gpu opacity-0 translate-y-10 scale-95"
-        >
-          {/* Neon Glow */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10">
-             <div className="absolute inset-[-2px] bg-gradient-to-t from-primary/40 to-transparent blur-md" />
-          </div>
+      {gridItems.map((item) => {
+        const isComingSoon = !item.src;
 
-          <div className="aspect-[16/10] overflow-hidden bg-black relative">
-            {item.type === "image" ? (
-              <img
-                src={item.src}
-                alt={item.title}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 transform-gpu"
-              />
-            ) : (
-              <video
-                ref={(el) => setVideoRef(item.id, el)}
-                data-src={item.src}
-                poster={item.poster}
-                muted={isMuted}
-                loop
-                playsInline
-                disablePictureInPicture
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 transform-gpu"
-              />
-            )}
-            
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity z-20" />
-            
-            {item.type === "video" && (
-              <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md p-1.5 rounded-full border border-white/10 z-30">
-                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                </svg>
+        return (
+          <figure
+            key={item.id}
+            onClick={() => !isComingSoon && onItemClick(item)}
+            className={`gallery-card group relative rounded-2xl overflow-hidden bg-card border border-white/5 shadow-xl transition-all duration-500 transform-gpu opacity-0 translate-y-10 scale-95
+              ${isComingSoon ? "cursor-default" : "cursor-pointer hover:shadow-primary/20 hover:border-primary/40"}`}
+          >
+            {/* MODRÝ PRÚŽOK A GRADIENT - Zobrazí sa iba ak NIE JE Coming Soon */}
+            {!isComingSoon && (
+              <div className="absolute inset-0 z-10 pointer-events-none transition-opacity duration-500 opacity-0 group-hover:opacity-100">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent" />
+                <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary shadow-[0_0_15px_#3b82f6]" />
               </div>
             )}
-          </div>
 
-          <figcaption className="relative z-30 p-5 bg-card/90 backdrop-blur-md">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-display text-base font-bold text-foreground group-hover:text-primary transition-colors duration-300">
-                {item.title}
-              </h3>
-              <span className="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded border border-primary/30 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                {item.type}
-              </span>
+            <div className="aspect-[16/10] overflow-hidden bg-black relative flex items-center justify-center">
+              {isComingSoon ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950 p-6 overflow-hidden">
+                  <div className="absolute inset-0 opacity-10" 
+                       style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)', backgroundSize: '12px 12px' }} />
+                  <div className="relative z-10 text-center">
+                    <span className="font-mono text-[10px] text-primary uppercase tracking-[0.3em] block mb-1">Status: Locked</span>
+                    <span className="text-white/40 text-xs font-bold uppercase tracking-widest">Coming Soon</span>
+                  </div>
+                </div>
+              ) : item.type === "image" ? (
+                <img
+                  src={item.src}
+                  alt={item.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 transform-gpu"
+                />
+              ) : (
+                <video
+                  ref={(el) => setVideoRef(item.id, el)}
+                  data-src={item.src}
+                  poster={item.poster}
+                  muted={isMuted}
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 transform-gpu"
+                />
+              )}
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70 z-20" />
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-              {item.description}
-            </p>
-          </figcaption>
-        </figure>
-      ))}
+
+            <figcaption className="relative z-30 p-5 bg-card/95 backdrop-blur-sm">
+              <div className="flex justify-between items-start mb-2">
+                <h3 className={`font-display text-base font-bold transition-colors duration-300 ${isComingSoon ? 'text-foreground/70' : 'text-foreground group-hover:text-primary'}`}>
+                  {item.title}
+                </h3>
+                {!isComingSoon && (
+                  <span className="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded border border-primary/30 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    {item.type}
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 italic font-light">
+                {isComingSoon ? "Module initialization pending. Feature available in future updates." : item.description}
+              </p>
+            </figcaption>
+          </figure>
+        );
+      })}
     </div>
   );
 };
