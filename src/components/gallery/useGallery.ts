@@ -6,7 +6,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-01",
     type: "image",
-    src: "src/assets/XOR_z_NAND.png",
+    src: "/assets/gallery/XOR_z_NAND.png",
     title: "Logic Gate Foundation",
     description: "Building the basic AND, OR, NOT gates from another gates",
     category: "build",
@@ -14,8 +14,8 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "vid-01",
     type: "video",
-    src: "src/assets/Full-adder.mp4",
-    poster: "src/assets/Full-adder.png",
+    src: "/assets/gallery/Full-adder.mp4",
+    poster: "/assets/gallery/Full-adder.png",
     title: "Full Adder Walkthrough",
     description: "Step-by-step construction of a binary full adder circuit",
     category: "walkthrough",
@@ -42,7 +42,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-03",
     type: "image",
-    src: "src/assets/D-latch.png",
+    src: "/assets/gallery/D-latch.png",
     title: "Memory Systems",
     description: "RAM architecture and memory addressing",
     category: "build",
@@ -50,7 +50,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-04",
     type: "image",
-    src: "src/assets/counter.png",
+    src: "/assets/gallery/counter.png",
     title: "Binary Counter",
     description: "Digital circuit that counts in binary with each clock pulse.",
     category: "showcase",
@@ -58,8 +58,8 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "vid-03",
     type: "video",
-    src: "src/assets/Signal-flow.mp4",
-    poster: "src/assets/D-latch.png",
+    src: "/assets/gallery/Signal-flow.mp4",
+    poster: "/assets/gallery/D-latch.png",
     title: "Signal Propagation",
     description: "Watch signals flow through connected gates",
     category: "demo",
@@ -76,7 +76,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-06",
     type: "image",
-    src: "src/assets/Decoder.png",
+    src: "/assets/gallery/Decoder.png",
     title: "Decoder Circuit",
     description: "Binary decoder for address selection",
     category: "showcase",
@@ -94,7 +94,7 @@ export const galleryItems: GalleryItem[] = [
   {
     id: "img-07",
     type: "image",
-    src: "src/assets/Clock-generator.png",
+    src: "/assets/gallery/Clock-generator.png",
     title: "Clock Generator",
     description: "Oscillator circuit for timing signals",
     category: "build",
@@ -116,6 +116,7 @@ export const galleryItems: GalleryItem[] = [
     category: "showcase",
   },
 ];
+
 
 export const useGallery = () => {
   const [state, setState] = useState<GalleryState>({
