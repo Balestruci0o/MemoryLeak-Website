@@ -18,13 +18,13 @@ const AboutSection = () => {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 75%",
-            end: "bottom 25%",
+            end: "bottom 20%",
             scrub: 1,
           }
         }
       );
 
-      // 2. Focus System
+      // 2. Focus System - Upravené pre skorší blur
       const textBlocks = gsap.utils.toArray(".reveal-block");
       textBlocks.forEach((block: any, index: number) => {
         const isFirst = index === 0;
@@ -32,8 +32,9 @@ const AboutSection = () => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: block,
-            start: isFirst ? "top 85%" : "top 75%",
-            end: "bottom 10%", 
+            // Upravený štart a koniec pre svižnejší prechod
+            start: isFirst ? "top 80%" : "top 70%", 
+            end: "top 15%", 
             scrub: 0.5,
           }
         });
@@ -42,17 +43,18 @@ const AboutSection = () => {
           opacity: 1, 
           filter: "blur(0px)", 
           y: 0, 
-          duration: 1 
+          duration: 1 // Fáza 1: Vynorenie (zaostrenie)
         }) 
         .to(block, { 
           opacity: 1, 
           filter: "blur(0px)", 
-          duration: 4 
+          duration: 3 // Fáza 2: Čitateľnosť (skrátená zo 4 na 1.5)
         })
         .to(block, { 
-          opacity: 0.1, 
-          filter: "blur(10px)", 
-          duration: 1 
+          opacity: 0.5, 
+          filter: "blur(12px)", // Fáza 3: Rozmazanie (nastane oveľa skôr)
+          y: -10, // Jemný posun nahor pre dynamiku odchodu
+          duration: 1
         });
       });
 
@@ -77,8 +79,9 @@ const AboutSection = () => {
     <section
       id="about"
       ref={sectionRef}
-      className="relative py-48 overflow-hidden bg-background font-body" // Rajdhani ako základ
+      className="relative py-48 overflow-hidden bg-background font-body"
     >
+      {/* Background Grid */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]" />
       </div>
@@ -86,8 +89,8 @@ const AboutSection = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           
+          {/* Power Line Visualizer */}
           <div className="hidden lg:flex lg:col-span-1 flex-col items-center self-stretch">
-            {/* JetBrains Mono pre tech popisky */}
             <div className="font-mono text-[10px] text-primary/40 mb-4 italic select-none uppercase tracking-widest">Init</div>
             <div className="w-px h-24 bg-gradient-to-b from-transparent to-primary/30" />
             <div className="w-2 h-2 rounded-full border border-primary shadow-[0_0_10px_#3b82f6]" />
@@ -96,19 +99,18 @@ const AboutSection = () => {
           </div>
 
           <div className="lg:col-span-11 max-w-4xl">
-            <div className="pl-4 md:pl-12 border-l border-white/5 space-y-32">
+            <div className="pl-4 md:pl-12 border-l border-white/5 space-y-20">
               
               {/* BLOK 1 - Mission Statement */}
               <div className="reveal-block opacity-10 filter blur-[10px] translate-y-4">
                 <span className="inline-block px-4 py-1.5 text-[10px] font-mono font-semibold tracking-widest text-primary border border-primary/30 rounded-full uppercase mb-6">
                   01_Purpose
                 </span>
-                {/* Orbitron pre nadpisy */}
                 <h2 className="font-display text-3xl md:text-6xl font-bold mb-3">
                   Removes the <br /> 
                   <span className="text-primary neon-text">Mystery</span>
                 </h2>
-                <p className="hero-animate max-w-2xl text-lg md:text-xl text-muted-foreground font-body mb-10 leading-relaxed">
+                <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-body mb-10 leading-relaxed">
                   MemoryLeak is an interactive learning game that removes the mystery behind computers. 
                   Instead of memorizing concepts or watching diagrams, you construct everything step by step.
                 </p>
@@ -121,11 +123,10 @@ const AboutSection = () => {
                    <span>02_Process</span>
                 </div>
                 <div className="space-y-6">
-                  <p className="hero-animate max-w-2xl text-lg md:text-xl text-muted-foreground font-body mb-10 leading-relaxed">
+                  <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-body mb-6 leading-relaxed">
                     You begin with individual transistors, turn them into logic gates, combine them into circuits, 
                     and slowly assemble an entire computer that behaves exactly as real hardware does.
                   </p>
-
                   <p className="text-primary/60 font-body text-[10px] italic uppercase tracking-wider">
                     // Every system you touch exists because you built it.
                   </p>
@@ -141,7 +142,6 @@ const AboutSection = () => {
                   </div>
                   
                   <div className="md:text-right">
-                    {/* Orbitron pre dramatický efekt */}
                     <h3 className="text-primary neon-text font-display text-3xl md:text-4xl font-black uppercase italic leading-none tracking-tighter">
                       No shortcuts. <br />
                       No black boxes. <br />
@@ -151,7 +151,7 @@ const AboutSection = () => {
                 </div>
               </div>
 
-              {/* STATICKÉ TAGY - JetBrains Mono */}
+              {/* STATICKÉ TAGY */}
               <div className="static-tags flex flex-wrap gap-8 pt-10 border-t border-white/5 font-mono text-[10px] tracking-[0.3em] text-primary/40 uppercase">
                 {["Sandbox Mode", "Levels", "Turing Complete"].map(tag => (
                   <span key={tag} className="flex items-center gap-2">
