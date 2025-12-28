@@ -70,7 +70,6 @@ const HowItWorksSection = () => {
       if (isDesktop) {
         const totalWidth = timeline.scrollWidth - window.innerWidth;
 
-        // 1. HLAVNÝ POHYB (Pin + Horizontal Scroll)
         const scrollTween = gsap.to(timeline, {
           x: -totalWidth,
           ease: "none",
@@ -78,17 +77,15 @@ const HowItWorksSection = () => {
             trigger: section,
             pin: true,
             start: "top top",
-            end: () => `+=${totalWidth * 1}`,
+            end: () => `+=${totalWidth}`,
             scrub: 1,
             invalidateOnRefresh: true,
             anticipatePin: 1, 
             fastScrollEnd: true, 
-            pinSpacing: true, // Explicitne vynútené pre stabilitu
+            pinSpacing: true,
           },
         });
-        
 
-        // 2. LINKA - Rastie so scrollom
         gsap.fromTo(line, 
           { scaleX: 0 },
           {
@@ -98,22 +95,19 @@ const HowItWorksSection = () => {
             scrollTrigger: {
               trigger: section,
               start: "top top",
-              end: () => `+=${totalWidth * 1}`,
+              end: () => `+=${totalWidth}`,
               scrub: 1,
             }
           }
         );
 
-        // 3. ANIMÁCIA KARIET (Postupné naskakovanie)
         items.forEach((item) => {
           const card = item.querySelector(".card-body");
           const node = item.querySelector(".timeline-node");
 
-          // Reset (skrytie)
           gsap.set(card, { opacity: 0, y: 40, scale: 0.95 });
           gsap.set(node, { scale: 0, opacity: 0 });
 
-          // Animácia karty
           gsap.to(card, {
             opacity: 1,
             y: 0,
@@ -121,13 +115,12 @@ const HowItWorksSection = () => {
             scrollTrigger: {
               trigger: item,
               containerAnimation: scrollTween,
-              start: "left 95%", // Objaví sa hneď na kraji
-              end: "left 70%",   // Plne usadená
+              start: "left 95%",
+              end: "left 70%",
               scrub: true,
             }
           });
 
-          // Animácia bodky
           gsap.to(node, {
             scale: 1,
             opacity: 1,
@@ -142,7 +135,6 @@ const HowItWorksSection = () => {
         });
 
       } else {
-        // Mobilná logika (Vertikálna)
         items.forEach((item) => {
           gsap.fromTo(item, 
             { opacity: 0, y: 20 },
@@ -160,8 +152,6 @@ const HowItWorksSection = () => {
       }
     }, sectionRef);
 
-    ScrollTrigger.refresh();
-
     return () => ctx.revert();
   }, []);
 
@@ -169,16 +159,15 @@ const HowItWorksSection = () => {
     <section 
       id="how-it-works"
       ref={sectionRef} 
-      className="relative min-h-screen lg:h-screen w-full bg-background flex flex-col overflow-hidden"
+      // overflow-x-hidden je kritické pre zamedzenie side-scrollu na dotykových zariadeniach
+      className="relative min-h-screen lg:h-screen w-full bg-background flex flex-col overflow-x-hidden"
     >
-      {/* Background efekty */}
       <div className="absolute inset-0 z-0 pointer-events-none fixed lg:absolute">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-card/50 to-background" />
         <div className="absolute top-0 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-0 right-1/4 w-64 h-64 md:w-96 md:h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
       </div>
 
-      {/* Grid Pattern */}
       <svg className="absolute inset-0 w-full h-full opacity-10 z-0 pointer-events-none fixed lg:absolute" preserveAspectRatio="none">
         <defs>
           <pattern id="ctaGrid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -189,8 +178,6 @@ const HowItWorksSection = () => {
       </svg>
 
       <div className="relative z-10 h-full flex flex-col py-10">
-        
-        {/* Header */}
         <div className="container mx-auto px-6 text-center shrink-0 mt-4 md:mt-10 mb-10 lg:mb-0">
           <div className="inline-flex items-center gap-2 px-3 py-1 md:px-4 md:py-2 rounded-full bg-accent/10 border border-accent/30 mb-4 md:mb-6">
             <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-accent animate-pulse" />
@@ -208,11 +195,10 @@ const HowItWorksSection = () => {
           </p>
         </div>
 
-        {/* Timeline Area */}
-        <div className="relative flex-grow flex lg:items-center w-full">
+        <div className="relative flex-grow flex lg:items-center w-full max-w-full overflow-hidden lg:overflow-visible">
           <div
             ref={timelineRef}
-            // pl-[100vw] zabezpečí, že aj prvá karta vchádza až po scrolle
+            // Zmenené: padding-left sa aplikuje len na lg, čo bráni horizontálnemu posunu na tabletoch
             className="flex flex-col gap-8 px-6 w-full lg:absolute lg:left-0 lg:flex-row lg:items-center lg:h-full lg:gap-0 lg:px-0 lg:pl-[100vw] lg:pr-[30vw] lg:w-auto"
           >
             <div
@@ -225,7 +211,6 @@ const HowItWorksSection = () => {
               const isEven = index % 2 === 0;
               return (
                 <div key={index} className="timeline-item relative flex-shrink-0 w-full lg:w-[320px] lg:h-full flex lg:items-center justify-center lg:mx-10">
-                  {/* Pôvodný Node (bodka s ikonkou) */}
                   <div className="timeline-node hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-9 h-9 md:w-11 md:h-11 rounded-full bg-background border-2 border-primary items-center justify-center shadow-[0_0_15px_rgba(var(--primary),0.3)]">
                       <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
                       <div className="relative z-10 text-primary scale-75 md:scale-90">
@@ -236,7 +221,6 @@ const HowItWorksSection = () => {
                       </div>
                   </div>
                   
-                  {/* Pôvodný Dizajn Kartičiek (Terminál štýl) */}
                   <div className={`card-body relative w-full lg:absolute ${isEven ? 'lg:bottom-[60%]' : 'lg:top-[60%]'}`}>
                     <div className="bg-zinc-950 border border-zinc-800 rounded-md overflow-hidden shadow-2xl mx-auto max-w-md lg:mx-2 will-change-transform">
                       <div className="bg-zinc-900 px-3 py-2 md:px-3 md:py-1.5 border-b border-zinc-800 flex items-center justify-between">
@@ -258,7 +242,6 @@ const HowItWorksSection = () => {
                         </p>
                       </div>
                     </div>
-                    {/* Spájacia čiarka */}
                     <div className={`hidden lg:block absolute left-1/2 -translate-x-1/2 w-0 border-l border-dashed border-primary/30 h-12 md:h-20 ${isEven ? 'top-full' : 'bottom-full'}`} />
                   </div>
                 </div>

@@ -40,19 +40,16 @@ const LearningPathsSection = () => {
         start: "top top",
         end: "+=200%", 
         pin: true,
-        // anticipatePin pomáha predísť trhnutiu pri vstupe do fixnej pozície
         anticipatePin: 1, 
         scrub: 0.5,
         snap: {
           snapTo: 1 / (learningPaths.length - 1),
-          // Delay nesmie byť 0, inak to "bojuje" so scrollom užívateľa
           delay: 0.1, 
           duration: { min: 0.2, max: 0.4 },
           ease: "power1.inOut"
         },
         onUpdate: (self) => {
           const index = Math.round(self.progress * (learningPaths.length - 1));
-          // Update stavu len ak sa index skutočne zmenil (optimalizácia)
           setActiveIndex((prev) => (prev !== index ? index : prev));
         }
       });
@@ -78,7 +75,6 @@ const LearningPathsSection = () => {
     <section 
       id="learning" 
       ref={containerRef} 
-      // Pridané will-change pre lepší výkon pri pinu
       className="h-screen w-full bg-background flex items-center justify-center overflow-hidden border-y border-white/5 will-change-transform"
     >
       <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -111,26 +107,41 @@ const LearningPathsSection = () => {
         </div>
 
         <div className="lg:col-span-8">
-          <div className="relative bg-black/40 border border-white/10 p-8 md:p-12 backdrop-blur-xl shadow-2xl">
+          <div className="relative bg-black/40 border border-white/10 p-8 md:p-12 backdrop-blur-xl shadow-2xl lg:overflow-visible">
             <div className="absolute top-0 left-0 w-full px-6 py-2 border-b border-white/5 flex justify-between font-mono text-[8px] uppercase tracking-[0.3em] text-white/20">
               <span>Path_Selection</span>
               <span className="text-primary/60">{learningPaths[activeIndex].tag}</span>
             </div>
 
-            <div className="min-h-[250px] flex flex-col justify-center mt-4">
-              {/* Animácia obsahu - key={activeIndex} zabezpečí re-render pri zmene */}
+            <div className="min-h-[250px] flex flex-col justify-center mt-4 relative">
               <div key={activeIndex} className="animate-in fade-in zoom-in-95 duration-500">
-                <h3 className="font-display text-4xl md:text-5xl font-black uppercase italic mb-6 leading-none">
-                  {learningPaths[activeIndex].title}
-                </h3>
-                <p className="text-lg text-muted-foreground font-body leading-relaxed max-w-xl italic">
-                  "{learningPaths[activeIndex].desc}"
-                </p>
-                
-                <div className="mt-10 flex items-center gap-4">
-                  <div className="h-px flex-1 bg-gradient-to-r from-primary/40 to-transparent" />
-                  <div className="font-mono text-[9px] text-primary/40 uppercase">Ready_to_init</div>
+                <div className="max-w-xl">
+                  <h3 className="font-display text-4xl md:text-5xl font-black uppercase italic mb-6 leading-none">
+                    {learningPaths[activeIndex].title}
+                  </h3>
+                  <p className="text-lg text-muted-foreground font-body leading-relaxed italic">
+                    "{learningPaths[activeIndex].desc}"
+                  </p>
+                  
+                  <div className="mt-10 flex items-center gap-4">
+                    <div className="h-px flex-1 bg-gradient-to-r from-primary/40 to-transparent" />
+                    <div className="font-mono text-[9px] text-primary/40 uppercase">Ready_to_init</div>
+                  </div>
                 </div>
+
+                {/* MASKOT - viditeľný len na desktope (lg a vyššie) */}
+                {activeIndex === 2 && (
+                  <div className="hidden lg:block absolute -right-20 -bottom-24 pointer-events-none select-none">
+                    <div className="relative group">
+                      <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-110 opacity-60" />
+                      <img 
+                        src="/assets/maskot_pointing.png" 
+                        alt="AI Assistant Mascot"
+                        className="w-80 h-auto object-contain relative z-10 drop-shadow-[0_0_30px_rgba(59,130,246,0.4)]"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
