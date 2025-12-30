@@ -86,7 +86,7 @@ export const galleryItems: GalleryItem[] = [
     type: "video",
     src: "",
     poster: "/assets/gallery_vid_04_poster.png",
-    title: "CLI Computer Demo",
+    title: "Assembly  Demo",
     description: "The complete computer executing commands",
     category: "demo",
     duration: "3:15",
