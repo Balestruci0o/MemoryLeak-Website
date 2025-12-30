@@ -30,6 +30,14 @@ export const galleryItems: GalleryItem[] = [
     category: "showcase",
   },
   {
+    id: "img-03",
+    type: "image",
+    src: "/assets/D-latch.png",
+    title: "Basic Memory Element",
+    description: "D-latch storing a single bit using logic gates",
+    category: "build",
+  },
+  {
     id: "vid-02",
     type: "video",
     src: "",
@@ -38,14 +46,6 @@ export const galleryItems: GalleryItem[] = [
     description: "Creating and modifying logic circuits in real time",
     category: "demo",
     duration: "1:30",
-  },
-  {
-    id: "img-03",
-    type: "image",
-    src: "/assets/D-latch.png",
-    title: "Basic Memory Element",
-    description: "D-latch storing a single bit using logic gates",
-    category: "build",
   },
   {
     id: "img-04",
