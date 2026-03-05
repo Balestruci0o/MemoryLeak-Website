@@ -1,7 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 gsap.registerPlugin(ScrollTrigger);
 
 const CTASection = () => {
@@ -35,32 +34,52 @@ const CTASection = () => {
   }, []);
 
   return (
-    <section id="survey" ref={sectionRef} className="relative py-32 overflow-hidden bg-background transform-gpu">
-      {/* CSS pre plynulú animáciu tlačidla */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes gentleFlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-gentle-flow {
-          background-size: 200% 200%;
-          animation: gentleFlow 6s ease-in-out infinite;
-        }
-      `}} />
+    <section
+      id="try-alpha"
+      ref={sectionRef}
+      className="relative py-32 overflow-hidden bg-background transform-gpu"
+    >
+      {/* CSS pre plynulú animáciu tlačidiel */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes gentleFlow {
+              0% { background-position: 0% 50%; }
+              50% { background-position: 100% 50%; }
+              100% { background-position: 0% 50%; }
+            }
+            .animate-gentle-flow {
+              background-size: 200% 200%;
+              animation: gentleFlow 6s ease-in-out infinite;
+            }
+          `,
+        }}
+      />
 
       {/* Animated background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-card/50 to-background" />
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+        <div
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
       </div>
 
       {/* Circuit decoration */}
-      <svg className="absolute inset-0 w-full h-full opacity-10 z-0 pointer-events-none" preserveAspectRatio="none">
+      <svg
+        className="absolute inset-0 w-full h-full opacity-10 z-0 pointer-events-none"
+        preserveAspectRatio="none"
+      >
         <defs>
           <pattern id="ctaGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M40 0H0v40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+            <path
+              d="M40 0H0v40"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.5"
+              className="text-primary"
+            />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#ctaGrid)" />
@@ -72,67 +91,86 @@ const CTASection = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/30 mb-8">
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             <span className="text-xs font-mono font-semibold text-accent uppercase tracking-wider">
-              Coming Soon
+              Alpha Test
             </span>
           </div>
 
           <h2 className="font-display text-4xl md:text-6xl font-bold mb-6">
-            <span className="text-foreground">This is Just the</span>
+            <span className="text-foreground">The First Test Version is Here!</span>
             <br />
-            <span className="text-primary neon-text">Beginning</span>
+            <span className="text-primary neon-text">Try it now</span>
           </h2>
 
-          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-            What you've experienced is a demo of an upcoming full-featured digital
-            electronics learning platform. Help shape the future of this project by
-            sharing your thoughts and suggestions.
+          <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
+            This is the very first alpha version of our digital electronics learning platform. 
+            Download the desktop app (.exe) or try the web version directly in your browser 
+            and experiment with circuits, simulations and basic lessons.
           </p>
 
-          <div className="glass-panel rounded-2xl p-8 mb-8 border border-white/5 backdrop-blur-sm bg-card/30 shadow-xl">
-            <h3 className="font-display text-xl font-bold text-foreground mb-4">
-              We'd Love Your Feedback
+          <div className="glass-panel rounded-2xl p-8 mb-10 border border-white/5 backdrop-blur-sm bg-card/30 shadow-xl">
+            <h3 className="font-display text-xl font-bold text-foreground mb-6">
+              Alpha Version 0.1 – Test Release
             </h3>
-            <p className="text-muted-foreground mb-6">
-              Take a quick survey to help us understand what features matter most to you.
-              Your input will directly influence the development roadmap.
-            </p>
 
-            {/* Plynulé tlačidlo (Gentle Flow) */}
-            <a
-              href="https://forms.gle/F8NYDLqyKaUw44N69"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-lg bg-gradient-to-r from-primary via-secondary to-primary animate-gentle-flow text-primary-foreground font-display font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105"
-              style={{
-                boxShadow: "0 0 30px hsl(180, 100%, 50%, 0.3), 0 0 60px hsl(160, 100%, 50%, 0.2)",
-              }}
-            >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Take the Survey
-            </a>
+            <div className="flex flex-col sm:flex-row gap-5 justify-center">
+              <a
+                href="public\game\MemoryLeak_0.1.exe" 
+                download
+                className="inline-flex items-center justify-center gap-3 px-8 py-5 rounded-xl bg-gradient-to-r from-primary via-secondary to-primary animate-gentle-flow text-primary-foreground font-display font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_hsl(180,100%,50%,0.4)] shadow-[0_0_30px_hsl(180,100%,50%,0.25)] min-w-[260px]"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                Download .exe (Windows)
+              </a>
+
+              <a
+                href="src\components\game\index.html" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-3 px-8 py-5 rounded-xl bg-white/10 border border-white/20 text-white font-display font-semibold tracking-wide transition-all duration-300 hover:bg-white/15 hover:border-white/30 hover:scale-105 min-w-[260px]"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                  />
+                </svg>
+                Try Web Version
+              </a>
+            </div>
+
+            <p className="text-sm text-muted-foreground mt-6 text-center">
+              This is an early test version – expect bugs and incomplete features.
+            </p>
           </div>
 
-          {/* VRÁTENÉ VŠETKY TRI IKONKY POD PANELOM */}
-          <div className="flex flex-wrap justify-center gap-8 text-muted-foreground">
+          {/* Small info icons */}
+          <div className="flex flex-wrap justify-center gap-8 text-muted-foreground mt-6">
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-sm">~2 minutes</span>
+              <span className="text-sm">~100 MB</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
               </svg>
-              <span className="text-sm">Anonymous</span>
+              <span className="text-sm">Windows 10+</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
               </svg>
-              <span className="text-sm">Your voice matters</span>
+              <span className="text-sm">Alpha – Browser & Desktop</span>
             </div>
           </div>
         </div>

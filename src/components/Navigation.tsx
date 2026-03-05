@@ -30,7 +30,7 @@ const Navigation = () => {
     { href: "#how-it-works", label: "How It Works" },
     { href: "#learning", label: "Features" },
     { href: "#gallery-showcase", label: "Gallery" },
-    { href: "#survey", label: "Survey" },
+    { href: "#try-alpha", label: "Try our game" },
     // { href: "#calculator", label: "Calculator" },
   ];
 
