@@ -26,5 +26,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "public/game_web_edition/index.audio.position.worklet.js", "public/game_web_edition/index.audio.worklet.js", "public/game_web_edition/index.js"]
 }
