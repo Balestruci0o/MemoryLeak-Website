@@ -130,7 +130,7 @@ const CTASection = () => {
               </a>
 
               <a
-                href="https://balestruci0o.itch.io/memory-leak" 
+                href="https://memory-leak-game.page.gd/" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-3 px-8 py-5 rounded-xl bg-white/10 border border-white/20 text-white font-display font-semibold tracking-wide transition-all duration-300 hover:bg-white/15 hover:border-white/30 hover:scale-105 min-w-[260px]"
