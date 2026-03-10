@@ -65,10 +65,10 @@ const Navigation = () => {
         </div>
 
         <button
-          onClick={() => scrollToSection("#gallery-showcase")}
+          onClick={() => scrollToSection("#try-alpha")}
           className="btn-neon text-xs px-6 py-2"
         >
-          View Gallery
+          Download
         </button>
       </div>
     </nav>

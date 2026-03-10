@@ -121,11 +121,11 @@ const HeroSection = () => {
         </p>
 
         <div className="hero-animate flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button onClick={() => scrollToSection("#about")} className="w-full sm:w-auto btn-neon btn-neon-green text-sm px-6">
-              About MemoryLeak
-          </button>
-          <button onClick={() => scrollToSection("#gallery-showcase")} className="w-full sm:w-auto btn-neon text-sm px-6">
+          <button onClick={() => scrollToSection("#gallery-showcase")} className="w-full sm:w-auto btn-neon btn-neon-green text-sm px-6">
               Open Gallery
+          </button>
+          <button onClick={() => scrollToSection("#try-alpha")} className="w-full sm:w-auto btn-neon text-sm px-6">
+              Download Game
           </button>
         </div>
       </div>
