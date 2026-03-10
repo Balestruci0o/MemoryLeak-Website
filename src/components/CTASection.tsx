@@ -114,7 +114,7 @@ const CTASection = () => {
 
             <div className="flex flex-col sm:flex-row gap-5 justify-center">
               <a
-                href="public\game\MemoryLeak_0.1.exe" 
+                href="public\game_download\MemoryLeak_0.1.exe" 
                 download
                 className="inline-flex items-center justify-center gap-3 px-8 py-5 rounded-xl bg-gradient-to-r from-primary via-secondary to-primary animate-gentle-flow text-primary-foreground font-display font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_hsl(180,100%,50%,0.4)] shadow-[0_0_30px_hsl(180,100%,50%,0.25)] min-w-[260px]"
               >
